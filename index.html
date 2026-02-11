@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DL Desktop - Automatisez vos commandes Digilab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --digilab-blue: #497fa6;
+            --digilab-light: #b9d4df;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--digilab-blue) 0%, var(--digilab-light) 100%);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero .tagline {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--white);
+            color: var(--digilab-blue);
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--white);
+            color: var(--digilab-blue);
+        }
+
+        /* Problem Section */
+        .problem {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--digilab-blue);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--text-light);
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problem-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .problem-box, .solution-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .problem-box {
+            border-left: 5px solid #dc3545;
+        }
+
+        .solution-box {
+            border-left: 5px solid #28a745;
+        }
+
+        .problem-box h3 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solution-box h3 {
+            color: #28a745;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .problem-box ul, .solution-box ul {
+            list-style: none;
+        }
+
+        .problem-box li {
+            padding: 10px 0;
+            color: var(--text-light);
+        }
+
+        .problem-box li::before {
+            content: "❌ ";
+            margin-right: 10px;
+        }
+
+        .solution-box li {
+            padding: 10px 0;
+            color: var(--text-dark);
+        }
+
+        .solution-box li::before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .arrow {
+            font-size: 3em;
+            color: var(--digilab-blue);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(145deg, var(--white) 0%, var(--digilab-light) 5%);
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 3px 10px rgba(73, 127, 166, 0.1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--digilab-blue);
+            box-shadow: 0 10px 30px rgba(73, 127, 166, 0.2);
+        }
+
+        .benefit-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            color: var(--digilab-blue);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: var(--digilab-light);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--digilab-blue) 0%, var(--digilab-light) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(73, 127, 166, 0.3);
+        }
+
+        .step h3 {
+            color: var(--digilab-blue);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            background: linear-gradient(145deg, var(--white) 0%, #f8f9fa 100%);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--digilab-blue);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(73, 127, 166, 0.2);
+        }
+
+        .feature-item h3 {
+            color: var(--digilab-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            font-size: 1.5em;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .price-card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 3px solid var(--digilab-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--digilab-blue);
+            transform: scale(1.05);
+        }
+
+        .price-card.featured::before {
+            content: "RECOMMANDÉ";
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--digilab-blue);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(73, 127, 166, 0.2);
+        }
+
+        .price-card h3 {
+            color: var(--digilab-blue);
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .price-card .price {
+            font-size: 2.5em;
+            color: var(--digilab-blue);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .price-card .period {
+            color: var(--text-light);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .price-card ul {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .price-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .price-card li::before {
+            content: "✓ ";
+            color: var(--digilab-blue);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .price-card .highlight {
+            color: var(--digilab-blue);
+            font-weight: 600;
+        }
+
+        /* Technical Specs */
+        .specs {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .spec-card {
+            background: linear-gradient(145deg, var(--digilab-light) 0%, var(--white) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .spec-card h3 {
+            color: var(--digilab-blue);
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .spec-card ul {
+            list-style: none;
+        }
+
+        .spec-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(73, 127, 166, 0.1);
+        }
+
+        .spec-card li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-card li::before {
+            content: "▸ ";
+            color: var(--digilab-blue);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 50px auto 0;
+        }
+
+        .faq-category {
+            margin-bottom: 40px;
+        }
+
+        .faq-category h3 {
+            color: var(--digilab-blue);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--digilab-light);
+        }
+
+        .faq-item {
+            background: var(--white);
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .faq-question:hover {
+            background: var(--digilab-light);
+            color: var(--digilab-blue);
+        }
+
+        .faq-question::after {
+            content: "+";
+            font-size: 1.5em;
+            color: var(--digilab-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 25px;
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+            padding: 20px 25px;
+        }
+
+        .faq-answer p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 80px 0;
+            background: var(--white);
+            text-align: center;
+        }
+
+        .video-placeholder {
+            max-width: 800px;
+            margin: 40px auto;
+            background: linear-gradient(145deg, var(--digilab-light) 0%, var(--white) 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .video-placeholder h3 {
+            color: var(--digilab-blue);
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        /* CTA Final */
+        .cta-final {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--digilab-blue) 0%, var(--digilab-light) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-final h2 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+        }
+
+        .cta-final p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2em;
+            }
+
+            .hero .tagline {
+                font-size: 1.2em;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .problem-visual {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .benefits-grid,
+            .features-grid,
+            .steps,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .price-card.featured {
+                transform: scale(1);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="version">Version 0.0.6</div>
+            <h1>DL Desktop</h1>
+            <p class="tagline">Fini les téléchargements manuels !</p>
+            <p class="subtitle">Automatisez la récupération de vos commandes Digilab<br>et concentrez-vous sur ce qui compte vraiment</p>
+            <div class="cta-buttons">
+                <a href="#pricing" class="cta-button">Découvrir les formules</a>
+                <a href="#video" class="cta-button secondary">Voir la démonstration</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evolution Section -->
+    <section class="problem">
+        <div class="container">
+            <h2 class="section-title">Allez plus loin avec Digilab</h2>
+            <p class="section-subtitle">Digilab vous permet déjà de centraliser vos commandes. DL Desktop pousse l'automatisation encore plus loin.</p>
+            
+            <div class="problem-visual">
+                <div class="problem-box">
+                    <h3>✓ Digilab Web</h3>
+                    <ul>
+                        <li>Centralisation des commandes</li>
+                        <li>Interface intuitive</li>
+                        <li>Accessible partout</li>
+                        <li>Gestion des praticiens</li>
+                        <li>Tableau de bord statistiques</li>
+                        <li>Stockage cloud sécurisé</li>
+                    </ul>
+                    <p style="margin-top: 20px; color: var(--digilab-blue); font-weight: 600;">
+                        ✓ Idéal pour consulter et gérer
+                    </p>
+                </div>
+
+                <div class="arrow">+</div>
+
+                <div class="solution-box">
+                    <h3>🚀 DL Desktop (Option Premium)</h3>
+                    <ul>
+                        <li>Téléchargement automatique</li>
+                        <li>Dézipage automatique</li>
+                        <li>Rangement automatique</li>
+                        <li>Stockage local instantané</li>
+                        <li>Exports CAD prêts à l'emploi</li>
+                        <li>Indépendance totale</li>
+                    </ul>
+                    <p style="margin-top: 20px; color: #28a745; font-weight: 600;">
+                        ✓ Idéal pour gagner du temps
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Les avantages de DL Desktop</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Gain de temps massif</h3>
+                    <p>Plus de téléchargements manuels. DL Desktop récupère automatiquement vos commandes toutes les 2 minutes, 24h/24.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3>Indépendance totale</h3>
+                    <p>Vos données sont stockées localement sur votre machine. Vous n'êtes plus dépendant du stockage Digilab.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <h3>Intégration CAD</h3>
+                    <p>Exports automatiques pour EXOCAD (.dentalProject) et 3Shape (.3OXZ). Ouvrez vos projets directement sans conversion.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📁</div>
+                    <h3>Organisation parfaite</h3>
+                    <p>Fichiers dézippés et rangés automatiquement où vous le souhaitez. Fini le désordre dans vos dossiers.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔔</div>
+                    <h3>Notifications discrètes</h3>
+                    <p>Une petite popup avec un son vous alerte dès qu'une nouvelle commande est téléchargée. Restez informé sans être dérangé.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌍</div>
+                    <h3>Multi-plateforme</h3>
+                    <p>Compatible Windows, Mac et Linux. Utilisez DL Desktop sur n'importe quel système d'exploitation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Comment ça marche ?</h2>
+            <p class="section-subtitle">Installation en 5 minutes, simplicité garantie</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Téléchargez</h3>
+                    <p>Téléchargez DL Desktop (0.0.6) pour Windows, Mac ou Linux et lancez l'installation</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configurez</h3>
+                    <p>Entrez vos identifiants Digilab et définissez vos dossiers de destination. Simple et rapide !</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Activez</h3>
+                    <p>Cochez "Activate automatic retrieval" et enregistrez. C'est parti !</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Travaillez</h3>
+                    <p>Vos commandes arrivent automatiquement. Ouvrez-les directement dans EXOCAD ou 3Shape</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Fonctionnalités détaillées</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3><span class="feature-icon">📥</span> Téléchargement automatique</h3>
+                    <p>DL Desktop vérifie les nouvelles commandes toutes les 2 minutes et les télécharge automatiquement en arrière-plan. Si votre connexion Internet coupe, la récupération reprend automatiquement dès que la connexion est rétablie.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">📦</span> Dézipage automatique</h3>
+                    <p>Les fichiers ZIP téléchargés sont automatiquement dézippés et leurs contenus organisés dans les dossiers que vous avez définis. Plus de manipulation manuelle !</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">🎯</span> Export EXOCAD</h3>
+                    <p>Génération automatique de fichiers .dentalProject avec tous les fichiers STL, PLY et images. Ouvrez directement dans EXOCAD pour commencer le travail.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">💎</span> Export 3Shape</h3>
+                    <p>Création automatique de fichiers .3OXZ compatibles avec DENTAL SYSTEM. Importez directement dans votre logiciel 3Shape.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">👥</span> Gestion des rôles</h3>
+                    <p>Administrateurs : accès à toutes les commandes du labo. Opérateurs : uniquement les commandes qui leur sont assignées via Digilab. Praticiens : toutes leurs commandes.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">📊</span> Logs détaillés</h3>
+                    <p>Suivez en temps réel l'activité de DL Desktop dans l'onglet Logs. Historique complet des téléchargements et des éventuelles erreurs.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">🔍</span> Recherche intégrée</h3>
+                    <p>Consultez et recherchez parmi toutes vos commandes téléchargées directement dans l'interface. Accédez rapidement aux dossiers locaux ou à la commande en ligne sur Digilab.</p>
+                </div>
+                <div class="feature-item">
+                    <h3><span class="feature-icon">🏢</span> Multi-postes</h3>
+                    <p>Installez plusieurs instances de DL Desktop dans votre laboratoire. Chaque prothésiste peut avoir sa propre installation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specs -->
+    <section class="specs">
+        <div class="container">
+            <h2 class="section-title">Configuration technique</h2>
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <h3>Systèmes compatibles</h3>
+                    <ul>
+                        <li>Windows 10 / 11</li>
+                        <li>macOS</li>
+                        <li>Linux</li>
+                    </ul>
+                </div>
+                <div class="spec-card">
+                    <h3>Matériel requis</h3>
+                    <ul>
+                        <li>Processeur : Intel Core i3 ou équivalent</li>
+                        <li>RAM : 4 Go min (8 Go recommandé)</li>
+                        <li>Disque : 500 Mo pour l'app</li>
+                        <li>Espace selon volume de commandes</li>
+                    </ul>
+                </div>
+                <div class="spec-card">
+                    <h3>Réseau</h3>
+                    <ul>
+                        <li>Connexion Internet stable</li>
+                        <li>5 Mbps minimum</li>
+                        <li>Accès aux répertoires locaux</li>
+                    </ul>
+                </div>
+                <div class="spec-card">
+                    <h3>Compatibilité CAD</h3>
+                    <ul>
+                        <li>EXOCAD (export .dentalProject)</li>
+                        <li>3Shape DENTAL SYSTEM (.3OXZ)</li>
+                        <li>Autres formats à venir</li>
+                        <li>Support de tous les fichiers Digilab</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Choisissez votre formule</h2>
+            <p class="section-subtitle">Toutes les formules incluent les mises à jour, sans engagement minimum</p>
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Basique</h3>
+                    <div class="price">Sur devis</div>
+                    <p class="period">Tarif à définir selon usage</p>
+                    <ul>
+                        <li>Téléchargement automatique illimité</li>
+                        <li>Exports EXOCAD et 3Shape</li>
+                        <li>Stockage local sécurisé</li>
+                        <li>Notifications discrètes en temps réel</li>
+                        <li>Gestion multi-utilisateurs</li>
+                        <li>Dézipage et rangement automatique</li>
+                        <li>Mises à jour incluses</li>
+                        <li class="highlight">Support par IA</li>
+                    </ul>
+                    <a href="#contact" class="cta-button">Demander un devis</a>
+                </div>
+                <div class="price-card featured">
+                    <h3>Essentielle</h3>
+                    <div class="price">Sur devis</div>
+                    <p class="period">Tarif à définir selon usage</p>
+                    <ul>
+                        <li>Toutes les fonctionnalités Basique</li>
+                        <li>Téléchargement automatique illimité</li>
+                        <li>Exports EXOCAD et 3Shape</li>
+                        <li>Stockage local sécurisé</li>
+                        <li>Notifications discrètes en temps réel</li>
+                        <li>Gestion multi-utilisateurs</li>
+                        <li>Dézipage et rangement automatique</li>
+                        <li>Mises à jour incluses</li>
+                        <li class="highlight">Support humain prioritaire</li>
+                        <li class="highlight">Réactivité maximale</li>
+                    </ul>
+                    <a href="#contact" class="cta-button">Demander un devis</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Questions fréquentes</h2>
+            <div class="faq-container">
+                
+                <!-- Commercial -->
+                <div class="faq-category">
+                    <h3>💰 Tarifs et modalités</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Combien coûte DL Desktop ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Le tarif de DL Desktop est défini sur devis selon vos besoins. Nous proposons deux formules : Basique (avec support IA) et Essentielle (avec support humain prioritaire). Le prix peut être proposé sous forme d'achat unique ou d'abonnement mensuel. Contactez-nous pour obtenir une offre personnalisée.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Les mises à jour sont-elles incluses ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui ! Toutes les mises à jour sont incluses dans votre formule, sans coût supplémentaire. Nous déployons plusieurs fonctionnalités majeures chaque trimestre.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Y a-t-il un engagement minimum ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Non, il n'y a aucun engagement minimum. Vous êtes libre de choisir la durée qui vous convient.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Peut-on tester avant d'acheter ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pour l'instant, nous ne proposons pas de période d'essai gratuite, mais une vidéo de démonstration détaillée est disponible pour découvrir toutes les fonctionnalités. N'hésitez pas à nous contacter pour une présentation personnalisée.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Installation -->
+                <div class="faq-category">
+                    <h3>🔧 Installation et configuration</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            L'installation est-elle compliquée ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pas du tout ! L'installation prend moins de 5 minutes et ne nécessite aucune compétence technique. Il suffit de télécharger l'installateur, de suivre les instructions à l'écran, puis de configurer vos paramètres Digilab. Aucun informaticien n'est nécessaire.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            DL Desktop fonctionne-t-il sur Mac et Linux ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui ! DL Desktop est compatible avec Windows 10/11, macOS et Linux. Vous pouvez l'utiliser sur le système d'exploitation de votre choix.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Peut-on installer DL Desktop sur plusieurs postes ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui, il est possible d'installer plusieurs instances de DL Desktop au sein du même laboratoire. Chaque prothésiste peut avoir sa propre installation sur son poste de travail.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sécurité -->
+                <div class="faq-category">
+                    <h3>🔒 Sécurité et confidentialité</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Mes données sont-elles en sécurité ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolument ! Vos données sont stockées directement sur votre PC, en local. DL Desktop télécharge uniquement les commandes présentes sur la plateforme Digilab et les enregistre sur votre machine. Vous gardez le contrôle total de vos fichiers.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Les données sont-elles toujours accessibles sur Digilab ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui ! Les commandes restent toujours stockées sur Digilab si vous le souhaitez. DL Desktop vous permet simplement de prendre votre indépendance en ayant également une copie locale sur votre machine.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Que se passe-t-il si mon disque dur tombe en panne ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Les commandes restent accessibles sur la plateforme Digilab. Vous pouvez réinstaller DL Desktop sur un nouveau poste et reconfigurer la récupération des commandes récentes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fonctionnement -->
+                <div class="faq-category">
+                    <h3>⚙️ Fonctionnement</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Que se passe-t-il si ma connexion Internet coupe ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>DL Desktop reprend automatiquement la récupération des commandes dès que votre connexion Internet est rétablie. Aucune intervention manuelle n'est nécessaire.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Le logiciel ralentit-il mon ordinateur ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Non. DL Desktop fonctionne en arrière-plan et utilise très peu de ressources système. Vous pouvez continuer à travailler normalement pendant que le logiciel récupère vos commandes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Puis-je choisir quelles commandes télécharger ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pour l'instant, il n'est pas possible de sélectionner des commandes spécifiques. DL Desktop télécharge automatiquement toutes les commandes auxquelles vous avez accès sur Digilab.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Comment désactiver temporairement le téléchargement ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Il suffit de fermer l'application DL Desktop. Le téléchargement automatique est désactivé tant que l'application n'est pas lancée.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            DL Desktop fonctionne-t-il 24h/24 ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>DL Desktop fonctionne tant que votre machine est allumée et que l'application est lancée. Il récupère automatiquement les nouvelles commandes toutes les 2 minutes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Combien d'espace disque faut-il prévoir ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>L'application elle-même nécessite 500 Mo. L'espace supplémentaire dépend de votre volume de commandes. Prévoyez suffisamment d'espace pour stocker vos fichiers de commandes selon votre activité.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compatibilité -->
+                <div class="faq-category">
+                    <h3>🔗 Compatibilité</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Quels logiciels CAD sont compatibles ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Actuellement, DL Desktop génère automatiquement des exports pour EXOCAD (.dentalProject) et 3Shape DENTAL SYSTEM (.3OXZ). Nous ajoutons régulièrement de nouvelles compatibilités. Si vous utilisez un autre logiciel, contactez-nous pour connaître nos prévisions.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Et si je n'utilise ni EXOCAD ni 3Shape ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pas de problème ! DL Desktop télécharge tous les fichiers contenus dans vos commandes (STL, PLY, images, etc.). Vous pouvez les utiliser avec n'importe quel logiciel, même sans les exports automatiques.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Tous les types de fichiers sont-ils supportés ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui, l'ensemble des fichiers contenus dans vos commandes Digilab sont automatiquement téléchargés et organisés par DL Desktop.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organisation -->
+                <div class="faq-category">
+                    <h3>👥 Organisation du laboratoire</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Comment gérer plusieurs prothésistes ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Chaque prothésiste peut installer DL Desktop sur son poste. Si un prothésiste est défini comme "opérateur" dans Digilab, il ne recevra automatiquement que les commandes qui lui ont été assignées par l'administrateur du laboratoire.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Comment sont assignées les commandes aux opérateurs ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>L'assignation des commandes aux différents opérateurs se fait directement via la plateforme Digilab. DL Desktop respecte automatiquement ces assignations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support -->
+                <div class="faq-category">
+                    <h3>🆘 Support et assistance</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Quel support est disponible ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Nous proposons deux niveaux de support : <strong>Formule Basique</strong> avec support par IA pour des réponses rapides aux questions courantes, et <strong>Formule Essentielle</strong> avec support humain prioritaire pour une assistance personnalisée avec réactivité maximale.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Y a-t-il une documentation ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Un guide d'utilisation complet est en cours de préparation. Cette page web sert également de tutoriel pour vous présenter toutes les fonctionnalités et répondre à vos questions.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Y a-t-il des tutoriels vidéo ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Une vidéo de démonstration complète est en cours de production. Elle présentera l'installation, la configuration et l'utilisation quotidienne de DL Desktop.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divers -->
+                <div class="faq-category">
+                    <h3>🔮 Migration et évolution</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Peut-on importer l'historique des anciennes commandes ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pour l'instant, il n'est pas possible d'importer l'historique complet des commandes passées. DL Desktop commence à télécharger les commandes à partir de la date que vous définissez lors de la configuration.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Puis-je continuer à télécharger manuellement ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui, tout à fait ! Vous pouvez utiliser DL Desktop en parallèle du téléchargement manuel sur Digilab. Les deux méthodes sont compatibles.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Que se passe-t-il si une commande ne se télécharge pas ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Vous pouvez relancer manuellement le téléchargement de n'importe quelle commande depuis l'interface de DL Desktop. Les logs détaillés vous permettent de suivre l'activité et d'identifier les éventuels problèmes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Quelles sont les futures fonctionnalités prévues ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Notre roadmap inclut : plus de personnalisation des paramètres, compatibilité avec d'autres logiciels CAD, et intégration avec d'autres outils internes. Nous déployons plusieurs fonctionnalités majeures chaque trimestre.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Y a-t-il des statistiques disponibles ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Digilab affiche un tableau de bord avec des statistiques sur le nombre de commandes reçues. DL Desktop fournit des logs techniques détaillés pour suivre son activité de téléchargement.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section" id="video">
+        <div class="container">
+            <h2 class="section-title">Découvrez DL Desktop en action</h2>
+            <div class="video-placeholder">
+                <h3>📹 Vidéo de démonstration</h3>
+                <p style="color: var(--text-light); font-size: 1.1em; margin: 20px 0;">
+                    Une vidéo complète présentant l'installation, la configuration et l'utilisation de DL Desktop sera bientôt disponible.
+                </p>
+                <p style="color: var(--digilab-blue); font-weight: 600;">
+                    En attendant, n'hésitez pas à nous contacter pour une démonstration personnalisée !
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-final" id="contact">
+        <div class="container">
+            <h2>Prêt à gagner du temps ?</h2>
+            <p>Rejoignez les laboratoires qui ont automatisé leur workflow avec DL Desktop</p>
+            <div class="cta-buttons">
+                <a href="mailto:contact@digilab.fr" class="cta-button">Demander un devis</a>
+                <a href="tel:+33123456789" class="cta-button secondary">Nous appeler</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isActive = this.classList.contains('active');
+                
+                // Close all other answers
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                    q.nextElementSibling.classList.remove('active');
+                });
+                
+                // Toggle current answer
+                if (!isActive) {
+                    this.classList.add('active');
+                    answer.classList.add('active');
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Apply animation to elements
+        document.querySelectorAll('.benefit-card, .feature-item, .step, .spec-card, .price-card, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
